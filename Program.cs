@@ -12,13 +12,9 @@
         };
 
         (int, int) start = (1, 0);
-        if (ScanRightLinear(values, start))
+        if (ScanRightLinear(values, start) || ScanLeftLinear(values, start))
         {
             Console.WriteLine("It is a match or sum is 10.");
-        }
-        else if (ScanLeftLinearForSumOfTen(values, start))
-        {
-            Console.WriteLine("Sum is equal to 10");
         }
         else
         {
@@ -58,7 +54,7 @@
             if (value >= 1 && value <= 10)
             {
                 Console.WriteLine($"Found not cleared value {value}");
-                if (startValue + value == 10 && startValue == value)
+                if (startValue + value == 10 || startValue == value)
                 {
                     Console.WriteLine($"Found match at {inspect.row} {inspect.column}");
                     return true;
@@ -100,10 +96,10 @@
                 continue;
             }
 
-            if (startValue + value == 10 && startValue == value)
+            if (value >= 1 && value <= 10)
             {
                 Console.WriteLine($"Found not cleared value {value}");
-                if (startValue + value == 10)
+                if (startValue + value == 10 || startValue == value)
                 {
                     Console.WriteLine($"Found match at {inspect.row} {inspect.column}");
                     return true;
