@@ -1,0 +1,15 @@
+/home/maciej/code/learning/number-match-solver/obj/Debug/net6.0/number-match-solver.csproj.AssemblyReference.cache
+/home/maciej/code/learning/number-match-solver/obj/Debug/net6.0/number-match-solver.GeneratedMSBuildEditorConfig.editorconfig
+/home/maciej/code/learning/number-match-solver/obj/Debug/net6.0/number-match-solver.AssemblyInfoInputs.cache
+/home/maciej/code/learning/number-match-solver/obj/Debug/net6.0/number-match-solver.AssemblyInfo.cs
+/home/maciej/code/learning/number-match-solver/obj/Debug/net6.0/number-match-solver.csproj.CoreCompileInputs.cache
+/home/maciej/code/learning/number-match-solver/bin/Debug/net6.0/number-match-solver
+/home/maciej/code/learning/number-match-solver/bin/Debug/net6.0/number-match-solver.deps.json
+/home/maciej/code/learning/number-match-solver/bin/Debug/net6.0/number-match-solver.runtimeconfig.json
+/home/maciej/code/learning/number-match-solver/bin/Debug/net6.0/number-match-solver.dll
+/home/maciej/code/learning/number-match-solver/bin/Debug/net6.0/number-match-solver.pdb
+/home/maciej/code/learning/number-match-solver/obj/Debug/net6.0/number-match-solver.dll
+/home/maciej/code/learning/number-match-solver/obj/Debug/net6.0/refint/number-match-solver.dll
+/home/maciej/code/learning/number-match-solver/obj/Debug/net6.0/number-match-solver.pdb
+/home/maciej/code/learning/number-match-solver/obj/Debug/net6.0/number-match-solver.genruntimeconfig.cache
+/home/maciej/code/learning/number-match-solver/obj/Debug/net6.0/ref/number-match-solver.dll
