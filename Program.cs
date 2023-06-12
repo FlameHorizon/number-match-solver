@@ -1,7 +1,6 @@
 ﻿internal class Program
 {
   private const int Cleared = -1;
-  private const int OutOfBounds = 0;
 
   private static void Main(string[] args)
   {
@@ -40,7 +39,7 @@
     }
   }
 
-  private static bool ScanBottomRightDiagonal(int[,] values, (int row, int column) start)
+  private static bool ScanBottomRightDiagonal(int[,] values, (int row, int column) start, out (int row, int column) found)
   {
 
     (int row, int column) inspect = (start.row + 1, start.column + 1);
@@ -52,6 +51,7 @@
       if (inspect.row >= values.GetLength(0)
         || inspect.column >= values.GetLength(1))
       {
+        found = (0, 0);
         return false;
       }
 
@@ -68,17 +68,19 @@
         if (startValue + value == 10 || startValue == value)
         {
           Console.WriteLine($"Found match at {inspect.row} {inspect.column}");
+          found = inspect;
           return true;
         }
         else
         {
+          found = (0, 0);
           return false;
         }
       }
     }
   }
 
-  private static bool ScanBottomLeftDiagonal(int[,] values, (int row, int column) start)
+  private static bool ScanBottomLeftDiagonal(int[,] values, (int row, int column) start, out (int row, int column) found)
   {
 
     (int row, int column) inspect = (start.row + 1, start.column - 1);
@@ -90,6 +92,7 @@
       if (inspect.row >= values.GetLength(0)
         || inspect.column < 0)
       {
+        found = (0, 0);
         return false;
       }
 
@@ -106,17 +109,19 @@
         if (startValue + value == 10 || startValue == value)
         {
           Console.WriteLine($"Found match at {inspect.row} {inspect.column}");
+          found = inspect;
           return true;
         }
         else
         {
+          found = (0, 0);
           return false;
         }
       }
     }
   }
 
-  private static bool ScanTopRightDiagonal(int[,] values, (int row, int column) start)
+  private static bool ScanTopRightDiagonal(int[,] values, (int row, int column) start, out (int row, int column) found)
   {
     (int row, int column) inspect = (start.row - 1, start.column + 1);
     int startValue = values[start.row, start.column];
@@ -126,6 +131,7 @@
       // If we hit beyond last row, we return false
       if (inspect.row < 0 || inspect.column >= values.GetLength(1))
       {
+        found = (0, 0);
         return false;
       }
 
@@ -142,18 +148,22 @@
         if (startValue + value == 10 || startValue == value)
         {
           Console.WriteLine($"Found match at {inspect.row} {inspect.column}");
+          found = inspect;
           return true;
         }
         else
         {
+
+          found = (0, 0);
           return false;
         }
       }
     }
   }
 
-  private static bool ScanTopLeftDiagonal(int[,] values, (int row, int column) start,
-  out (int row, int column) found)
+  private static bool ScanTopLeftDiagonal(int[,] values,
+                                          (int row, int column) start,
+                                          out (int row, int column) found)
   {
     (int row, int column) inspect = (start.row - 1, start.column - 1);
     int startValue = values[start.row, start.column];
@@ -233,7 +243,7 @@
 
   private static bool ScanTopLinear(int[,] values,
                                     (int row, int column) start,
-                                    (int row, int column) found)
+                                    out (int row, int column) found)
   {
     (int row, int column) inspect = (start.row - 1, start.column);
     int startValue = values[start.row, start.column];
