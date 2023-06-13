@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Runtime.CompilerServices;
 using Model;
 
 internal class Program
@@ -13,14 +14,21 @@ internal class Program
   {
     var game = new Game(new int[,]
     {
-      {9,5,8,7,9,7,Blocked,5,9},
-      {1,6,9,6,8,4,Blocked,Blocked,8}
+      {1,1},
+      {2,3}
     });
 
     Cords start = new() { X = 0, Y = 0 };
     Cords found = game.SearchForPair(start);
 
     System.Console.WriteLine($"Found at {found.X}:{found.Y}");
+
+    if (found != Cords.Empty)
+    {
+      game.ClearPair(start, found);
+    }
+
+    game.PrintBoard();
 
 
 

@@ -5,12 +5,11 @@ namespace Model
         private const int Cleared = -1;
         private const int Blocked = -2;
 
-        private readonly int[,] _board;
+        private int[,] _board;
         private readonly int _lowerRowLimit = 0;
         private readonly int _upperRowLimit;
         private readonly int _lowerColumnLimit = 0;
         private readonly int _upperColumnLimit;
-
 
         public Game(int[,] board)
         {
@@ -31,13 +30,80 @@ namespace Model
             if (SerachLinearRight(start, out Cords found)
             || SearchLinearLeft(start, out found)
             || SerachLinearTop(start, out found)
-            || SerachLinearBottom(start, out found))
+            || SerachLinearBottom(start, out found)
+            || SerachDiagonalTopLeft(start, out found)
+            || SerachDiagonalTopRight(start, out found)
+            || SerachDiagonalBottomLeft(start, out found)
+            || SerachDiagonalBottomRight(start, out found))
             {
                 return found;
             }
             else
             {
                 return Cords.Empty;
+            }
+        }
+
+        private bool SerachDiagonalBottomRight(Cords start, out Cords found)
+        {
+            return SerachDiagonal(start, out found, Direction.BottomRight);
+        }
+
+        private bool SerachDiagonalBottomLeft(Cords start, out Cords found)
+        {
+            return SerachDiagonal(start, out found, Direction.BottomLeft);
+        }
+
+        private bool SerachDiagonalTopRight(Cords start, out Cords found)
+        {
+            return SerachDiagonal(start, out found, Direction.TopRight);
+        }
+
+        private bool SerachDiagonalTopLeft(Cords start, out Cords found)
+        {
+            return SerachDiagonal(start, out found, Direction.TopLeft);
+        }
+
+        private bool SerachDiagonal(Cords start, out Cords found, Direction direction)
+        {
+            Cords inspecting;
+            Cords offset = direction switch
+            {
+                Direction.TopLeft => new Cords { X = -1, Y = -1 },
+                Direction.TopRight => new Cords { X = 1, Y = -1 },
+                Direction.BottomLeft => new Cords { X = -1, Y = 1 },
+                _ => new Cords { X = 1, Y = 1 }
+            };
+            inspecting = start.AddOffset(offset);
+
+            while (true)
+            {
+                if (inspecting.X >= _upperRowLimit
+                || inspecting.X < _lowerRowLimit
+                || inspecting.Y >= _upperColumnLimit
+                || inspecting.Y < _lowerColumnLimit)
+                {
+                    found = Cords.Empty;
+                    return false;
+                }
+
+                int inspectValue = _board[inspecting.X, inspecting.Y];
+                if (inspectValue == Cleared)
+                {
+                    inspecting = inspecting.AddOffset(offset);
+                    continue;
+                }
+
+                if (inspectValue == Blocked)
+                {
+                    found = Cords.Empty;
+                    return false;
+                }
+
+                if (Enumerable.Range(1, 10).Contains(inspectValue))
+                {
+                    return CompareValues(start, inspecting, out found);
+                }
             }
         }
 
@@ -80,13 +146,13 @@ namespace Model
 
             while (true)
             {
-                if (inspecting.X > _upperRowLimit || inspecting.X < _lowerRowLimit)
+                if (inspecting.X >= _upperRowLimit || inspecting.X < _lowerRowLimit)
                 {
                     found = Cords.Empty;
                     return false;
                 }
 
-                if (inspecting.Y > _upperColumnLimit || inspecting.Y < _lowerColumnLimit)
+                if (inspecting.Y >= _upperColumnLimit || inspecting.Y < _lowerColumnLimit)
                 {
                     if (direction == Direction.Right)
                     {
@@ -124,7 +190,11 @@ namespace Model
             Left,
             Right,
             Top,
-            Bottom
+            Bottom,
+            TopLeft,
+            TopRight,
+            BottomLeft,
+            BottomRight
         }
 
         private bool CompareValues(Cords start, Cords inspecting, out Cords found)
@@ -141,6 +211,83 @@ namespace Model
                 found = Cords.Empty;
                 return false;
             }
+        }
+
+        internal void ClearPair(Cords start, Cords found)
+        {
+            Clear(start);
+            Clear(found);
+
+            RemoveClearedRows();
+        }
+
+        private void RemoveClearedRows()
+        {
+            int rowsToRemove = 0;
+            for (int i = 0; i < _board.GetLength(0); i++)
+            {
+                int[] row = GetRow(i);
+                if (row.All(x => x == Cleared || x == Blocked))
+                {
+                    rowsToRemove++;
+                }
+            }
+
+            // If there is nothing to remove, exit.
+            if (rowsToRemove == 0)
+            {
+                return;
+            }
+
+            // Create new array with smaller size.
+            int newRowsCount = _board.GetLength(0) - rowsToRemove;
+            int currentRow = 0;
+            int[,] array = new int[newRowsCount, _upperColumnLimit];
+
+            for (int i = 0; i < _board.GetLength(0); i++)
+            {
+                int[] row = GetRow(i);
+                if (row.All(x => x != Cleared && x != Blocked))
+                {
+                    for (int j = 0; j < _upperColumnLimit; j++)
+                    {
+                        array[currentRow, j] = _board[i, j];
+                    }
+
+                    currentRow++;
+                }
+            }
+
+            _board = array;
+        }
+
+        private void Clear(Cords cords)
+        {
+            _board[cords.X, cords.Y] = Cleared;
+        }
+
+        internal void PrintBoard()
+        {
+            if (_board.GetLength(0) == 0)
+            {
+                Console.WriteLine("Board has been cleared.");
+                return;
+            }
+
+            for (int i = 0; i < _board.GetLength(0); i++)
+            {
+                string row = string.Join(',', GetRow(i));
+                row = row.Replace("-1", "#").Replace("-2", "*");
+
+                Console.WriteLine(row);
+            }
+        }
+
+        private int[] GetRow(int rowNumber)
+        {
+            return Enumerable.Range(0, _board.GetLength(1))
+                    .Select(x => _board[rowNumber, x])
+                    .ToArray();
         }
     }
 
